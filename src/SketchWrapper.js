@@ -1,9 +1,10 @@
 import React, { Component } from 'react'
 import Sketch from 'react-p5'
-import {WIDTH, HEIGHT, PIPE_FREQ, FRAME_RATE} from "./constants";
+import {WIDTH, HEIGHT, PIPE_FREQ, FRAME_RATE, CTX, GENERATION, MAX_FITNESS} from "./constants";
 import {Pipe} from "./pipe";
 import {Bird} from "./bird";
 import API from "./API";
+import Chart from "chart.js"
 
 let $ = require('jquery');
 
@@ -21,7 +22,8 @@ export default class SketchWrapper extends Component {
             bird_states: [],
             pipes: [],
             pipe_states: [],
-            has_prediction: false
+            has_prediction: false,
+            chart: null
         };
 
         this.handle_number_of_birds = this.handle_number_of_birds.bind(this);
@@ -30,6 +32,7 @@ export default class SketchWrapper extends Component {
         this.predict = this.predict.bind(this);
         this.is_ready = this.is_ready.bind(this);
         this.is_ready_cb = this.is_ready_cb.bind(this);
+        this.handle_info = this.handle_info.bind(this);
     }
 
     predict(){
@@ -58,6 +61,7 @@ export default class SketchWrapper extends Component {
     is_ready_cb(resp){
         this.state.is_ready = resp;
         if(resp){
+            API.get_info(this.handle_info);
             this.prepare();
             console.log("Prepare...")
         }
@@ -177,9 +181,26 @@ export default class SketchWrapper extends Component {
         }
     };
 
+    handle_info(info){
+        this.state.chart = new Chart(CTX, {
+            type: 'line',
+            data: {
+                labels: GENERATION,
+                datasets: [{
+                    label: 'Max Fitness',
+                    data: MAX_FITNESS,
+                    lineTension: 0,
+                    backgroundColor: "rgba(150,150,150,0.1)"
+                }]
+            }
+        });
+        this.state.chart.update();
+        info.push(this.state.number_of_birds);
+        this.props.info(info);
+    }
+
     draw = p5 => {
         p5.clear();
-        p5.background(0);
 
         if(!this.state.running){
             p5.frameCount = 0;

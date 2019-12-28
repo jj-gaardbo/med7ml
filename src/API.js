@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import {GENERATION, MAX_FITNESS} from "./constants";
 
 let $ = require('jquery');
 
@@ -33,6 +34,23 @@ export default class API{
     static get_next_generation(callback){
         console.log("Next");
         $.get(url + 'get_next_generation', (resp) => {
+            callback(resp);
+        });
+    }
+
+    static get_info(callback){
+        $.get(url + 'get_info', (resp) => {
+            let max_fitness = parseFloat(resp[1]);
+            MAX_FITNESS.push(max_fitness);
+            GENERATION.push(parseInt(resp[0]));
+
+            if(MAX_FITNESS.length > 200){
+                MAX_FITNESS.splice(0, 1);
+            }
+
+            if(GENERATION.length > 200){
+                GENERATION.splice(0, 1);
+            }
             callback(resp);
         });
     }

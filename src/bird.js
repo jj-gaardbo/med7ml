@@ -11,7 +11,7 @@ export class Bird{
         this.velocity = 0;
         this.speed = GAME_SPEED;
         this.score = 0;
-        this.passed_pipes = 1;
+        this.passed_pipes = 0;
         this.prediction = null;
         this.closest = null;
         this.dead = false;
@@ -61,7 +61,8 @@ export class Bird{
             this.x -= this.speed;
             return;
         }
-        this.score++
+        this.score++;
+        this.score = this.score+this.passed_pipes;
 
         this.velocity += this.gravity;
         this.velocity *= 0.998;

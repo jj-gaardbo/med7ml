@@ -3,7 +3,7 @@ import {GAME_SPEED, HEIGHT, WIDTH} from "./constants";
 export class Pipe{
     constructor(p5){
         this.p5 = p5;
-        this.spacing = 200;
+        this.spacing = 500;
         this.top = 0 + Math.random() * ((HEIGHT-this.spacing) - 0);
         this.bottom = HEIGHT - (this.top + this.spacing);
         this.w = 80;

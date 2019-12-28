@@ -1,5 +1,6 @@
 const HtmlWebPackPlugin = require("html-webpack-plugin");
 let HtmlWebpackInlineSourcePlugin = require('html-webpack-inline-source-plugin');
+let ExtractTextPlugin = require('extract-text-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 module.exports = {
     output: {
@@ -15,6 +16,13 @@ module.exports = {
                 }
             },
             {
+                test: /\.css$/,
+                use: ExtractTextPlugin.extract({
+                    fallback: 'style-loader',
+                    use: 'css-loader',
+                })
+            },
+            {
                 test: /\.html$/,
                 use: [
                     {
@@ -25,6 +33,7 @@ module.exports = {
         ]
     },
     plugins: [
+        new ExtractTextPlugin('main.css'),
         new HtmlWebPackPlugin({
             template: "./src/index.html",
             filename: "./index.html",
