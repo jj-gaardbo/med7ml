@@ -63,9 +63,15 @@ export class Bird{
         }
         this.score++;
         this.score = this.score+this.passed_pipes;
+        if((this.y > this.closest.top && this.y < this.closest.bottom)){
+            this.score++;
+        }
+        if (this.y >= HEIGHT || this.y <= 0) {
+            this.score = Math.floor(this.score*0.5);
+        }
 
         this.velocity += this.gravity;
-        this.velocity *= 0.998;
+        this.velocity *= 0.98;
         this.y += this.velocity;
 
         if (this.y >= HEIGHT) {

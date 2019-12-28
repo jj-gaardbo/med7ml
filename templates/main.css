@@ -67,3 +67,19 @@ html,body{
     margin-left: -750px;
     background-color: black;
 }
+
+.info{
+    width: 1500px;
+    top: 20px;
+    left: 50%;
+    margin-left: -750px;
+    position: absolute;
+    color: #ffffff;
+    text-align: right;
+    line-height: 1.4em;
+    opacity: 0.2;
+}
+
+.info p{
+    padding-right: 30px;
+}
