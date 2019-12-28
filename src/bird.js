@@ -55,7 +55,7 @@ export class Bird{
 
     update() {
         if(this.dead){
-            if(this.x < this.width){
+            if(this.x < 0){
                 return;
             }
             this.x -= this.speed;
@@ -77,6 +77,10 @@ export class Bird{
             this.dead = true;
             this.y = 0;
             this.velocity = 0;
+        }
+
+        if(this.prediction !== null && this.prediction[0] > this.prediction[1]){
+            this.up();
         }
 
     }
