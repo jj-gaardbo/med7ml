@@ -1,6 +1,15 @@
 import React, { Component } from 'react'
 import Sketch from 'react-p5'
-import {WIDTH, HEIGHT, PIPE_FREQ, FRAME_RATE, CTX, GENERATION, MAX_FITNESS} from "./constants";
+import {
+    WIDTH,
+    HEIGHT,
+    PIPE_FREQ,
+    FRAME_RATE,
+    CTX,
+    GENERATION,
+    MAX_FITNESS,
+    set_alive_count, get_alive_count
+} from "./constants";
 import {Pipe} from "./pipe";
 import {Bird} from "./bird";
 import API from "./API";
@@ -92,6 +101,8 @@ export default class SketchWrapper extends Component {
                 API.get_number_of_birds(self.handle_number_of_birds);
                 return;
             }
+
+            set_alive_count(self.state.number_of_birds);
 
             if(self.state.birds.length === 0){
                 console.log("Creating birds...");
@@ -214,6 +225,8 @@ export default class SketchWrapper extends Component {
             p5.frameCount = 0;
             return;
         }
+
+        this.props.count(get_alive_count());
 
         this.update_objects();
         this.update_states();

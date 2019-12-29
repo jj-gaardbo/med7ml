@@ -1,5 +1,5 @@
 //https://www.youtube.com/watch?v=c6y21FkaUqw
-import {GAME_SPEED, HEIGHT, WIDTH} from "./constants";
+import {ALIVE_COUNT, GAME_SPEED, get_alive_count, HEIGHT, set_alive_count, WIDTH} from "./constants";
 
 export class Bird{
     constructor(p5, player = false){
@@ -64,7 +64,7 @@ export class Bird{
             return;
         }
         this.score++;
-        this.score = this.score+this.passed_pipes;
+        /*this.score = this.score+this.passed_pipes;*/
 /*        if((this.y > this.closest.top && this.y < this.closest.bottom)){
             this.score++;
         }*/
@@ -86,6 +86,10 @@ export class Bird{
             this.dead = true;
             this.y = 0;
             this.velocity = 0;
+        }
+
+        if(this.dead){
+            set_alive_count(get_alive_count()-1);
         }
 
         if(this.prediction !== null && this.prediction[0] > 0){

@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import {GENERATION, MAX_FITNESS} from "./constants";
+import {GENERATION, MAX_FITNESS, set_alive_count} from "./constants";
 
 let $ = require('jquery');
 
@@ -13,6 +13,7 @@ if(debug){
 export default class API{
     static get_number_of_birds(callback) {
         $.get(url + 'get_count', (resp) => {
+            set_alive_count(parseInt(resp));
             callback(parseInt(resp));
         });
     }
