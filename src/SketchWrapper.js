@@ -15,7 +15,7 @@ export default class SketchWrapper extends Component {
             is_ready:false,
             p5:null,
             intervalID: 0,
-            timeout: 1000,
+            timeout: 500,
             running: false,
             number_of_birds: 0,
             birds: [],
@@ -33,10 +33,16 @@ export default class SketchWrapper extends Component {
         this.is_ready = this.is_ready.bind(this);
         this.is_ready_cb = this.is_ready_cb.bind(this);
         this.handle_info = this.handle_info.bind(this);
+        this.prediction_received = this.prediction_received.bind(this);
     }
 
-    predict(){
-        API.get_predictions(this.state.is_ready, this.state.birds, this.state.bird_states, this.state.pipes, this.state.pipe_states);
+    predict(callback){
+        this.setState({has_prediction:false});
+        API.get_predictions(this.state.is_ready, this.state.birds, this.state.bird_states, this.state.pipes, this.state.pipe_states, callback);
+    }
+
+    prediction_received(){
+        this.setState({has_prediction:true});
     }
 
     clear(){
@@ -105,7 +111,7 @@ export default class SketchWrapper extends Component {
                 self.update_states();
             }
 
-            self.predict();
+            self.predict(self.prediction_received);
 
             self.run();
             self.clear();
@@ -120,7 +126,7 @@ export default class SketchWrapper extends Component {
 
     stop(){
         console.log("Stop");
-        this.setState({is_ready:false,running:false,birds:[],pipes:[],bird_states:[],pipe_states:[]});
+        this.setState({is_ready:false,running:false,birds:[],pipes:[],bird_states:[],pipe_states:[], has_prediction: false});
     }
 
     componentDidMount() {
@@ -176,7 +182,9 @@ export default class SketchWrapper extends Component {
         this.state.pipe_states = [];
 
         for(let i = 0; i < this.state.birds.length; i++){
-            this.state.pipe_states = [this.state.birds[i].closest.top/HEIGHT, this.state.birds[i].closest.bottom/HEIGHT, this.state.birds[i].closest.x/WIDTH];
+            let middle = this.state.birds[i].closest.middle/HEIGHT;
+            let difference = (this.state.birds[i].y-this.state.birds[i].closest.middle)/HEIGHT;
+            this.state.pipe_states = [middle, difference];
             this.state.bird_states.push([(this.state.birds[i].dead ? 0 : 1), this.state.birds[i].y/HEIGHT, this.state.birds[i].score]);
         }
     };
@@ -214,7 +222,7 @@ export default class SketchWrapper extends Component {
             this.stop();
             API.get_next_generation(this.is_ready);
         } else {
-            this.predict();
+            this.predict(this.prediction_received);
         }
 
         if (p5.frameCount % PIPE_FREQ === 0) {

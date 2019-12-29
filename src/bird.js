@@ -1,11 +1,14 @@
 //https://www.youtube.com/watch?v=c6y21FkaUqw
-import {GAME_SPEED, HEIGHT} from "./constants";
+import {GAME_SPEED, HEIGHT, WIDTH} from "./constants";
 
 export class Bird{
     constructor(p5, player = false){
         this.p5 = p5;
+        this.size = 20;
         this.y = HEIGHT/2;
-        this.x = 100;
+        //this.y += Math.floor(Math.random() * this.size);
+        this.x = 300;
+        //this.x+=Math.floor(Math.random() * this.size);
         this.gravity = 0.9;
         this.lift = -12;
         this.velocity = 0;
@@ -15,7 +18,6 @@ export class Bird{
         this.prediction = null;
         this.closest = null;
         this.dead = false;
-        this.size = 20;
         this.random_col = Math.floor(Math.random() * 255);
         this.player = player;
     }
@@ -63,15 +65,15 @@ export class Bird{
         }
         this.score++;
         this.score = this.score+this.passed_pipes;
-        if((this.y > this.closest.top && this.y < this.closest.bottom)){
+/*        if((this.y > this.closest.top && this.y < this.closest.bottom)){
             this.score++;
-        }
-        if (this.y >= HEIGHT || this.y <= 0) {
+        }*/
+        /*if (this.y >= HEIGHT || this.y <= 0) {
             this.score = Math.floor(this.score*0.5);
-        }
+        }*/
 
         this.velocity += this.gravity;
-        this.velocity *= 0.98;
+        this.velocity *= 0.95;
         this.y += this.velocity;
 
         if (this.y >= HEIGHT) {
@@ -86,7 +88,7 @@ export class Bird{
             this.velocity = 0;
         }
 
-        if(this.prediction !== null && this.prediction[0] > this.prediction[1]){
+        if(this.prediction !== null && this.prediction[0] > 0){
             this.up();
         }
 

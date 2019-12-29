@@ -17,7 +17,7 @@ export default class API{
         });
     }
 
-    static get_predictions(is_ready, birds, bird_states, pipes, pipe_states){
+    static get_predictions(is_ready, birds, bird_states, pipes, pipe_states, callback){
         if(!is_ready){
             return;
         }
@@ -28,6 +28,8 @@ export default class API{
             for(let i = 0; i < birds.length; i++){
                 birds[i].prediction = resp[i][0];
             }
+        }).done(function(resp){
+            callback()
         });
     };
 

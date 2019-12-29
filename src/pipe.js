@@ -10,6 +10,7 @@ export class Pipe{
         this.speed = GAME_SPEED;
         this.highlight = false;
         this.x = WIDTH;
+        this.middle = Math.round(this.top+this.spacing*0.5);
     }
 
     hits(bird) {
