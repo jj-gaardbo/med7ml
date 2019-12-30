@@ -225,13 +225,13 @@ export default class SketchWrapper extends Component {
                     label: 'Max Fitness',
                     data: MAX_FITNESS,
                     lineTension: 0,
-                    backgroundColor: "rgba(150,150,150,0.1)"
+                    backgroundColor: "rgba(150,100,80,0.1)"
                 },
                 {
                     label: 'Avg Score',
                     data: AVG_SCORE,
                     lineTension: 0,
-                    backgroundColor: "rgba(0,200,200,0.1)"
+                    backgroundColor: "rgba(80,100,150,0.1)"
                 }]
             }
         });

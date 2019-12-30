@@ -9,7 +9,7 @@ export class Bird{
         //this.y += Math.floor(Math.random() * this.size);
         this.x = 300;
         //this.x+=Math.floor(Math.random() * this.size);
-        this.gravity = 0.9;
+        this.gravity = 1;
         this.lift = -12;
         this.velocity = 0;
         this.speed = GAME_SPEED;
@@ -73,7 +73,7 @@ export class Bird{
         }*/
 
         this.velocity += this.gravity;
-        this.velocity *= 0.9998;
+        //this.velocity *= 0.9998;
         this.y += this.velocity;
 
         if (this.y >= HEIGHT) {
