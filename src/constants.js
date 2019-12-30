@@ -1,4 +1,4 @@
-export const FRAME_RATE = 10;
+export const FRAME_RATE = 16;
 export const GAME_SPEED = 25;
 export const PIPE_FREQ = 33;
 export let WIDTH = 1200;

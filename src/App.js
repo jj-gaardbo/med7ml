@@ -40,12 +40,14 @@ class App extends React.Component {
             <div className="App">
                 <SketchWrapper count={this.handle_alive_count} info={this.handle_info} />
                 <div className="info">
-                    <p>Generation: {this.state.generation}</p>
-                    <p>Population Size: {this.state.population_count}</p>
-                    <p>Mating Pool Size: {this.state.mating_pool_size}</p>
-                    <p>Max Fitness: {this.state.max_fitness}</p>
-                    <p>Alive Count: {this.state.alive_count}</p>
-                    <p>Avg score: {this.state.avg_score}</p>
+                    <div className="inner">
+                        <p>Generation: {this.state.generation}</p>
+                        <p>Population Size: {this.state.population_count}</p>
+                        <p>Mating Pool Size: {this.state.mating_pool_size}</p>
+                        <p>Max Fitness: {this.state.max_fitness}</p>
+                        <p>Alive Count: {this.state.alive_count}</p>
+                        <p>Avg score: {this.state.avg_score}</p>
+                    </div>
                 </div>
             </div>
         )
