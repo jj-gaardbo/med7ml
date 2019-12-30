@@ -8,7 +8,7 @@ import {
     CTX,
     GENERATION,
     MAX_FITNESS,
-    set_alive_count, get_alive_count
+    set_alive_count, get_alive_count, AVG_SCORE
 } from "./constants";
 import {Pipe} from "./pipe";
 import {Bird} from "./bird";
@@ -32,6 +32,7 @@ export default class SketchWrapper extends Component {
             pipes: [],
             pipe_states: [],
             has_prediction: false,
+            predicting: false,
             chart: null
         };
 
@@ -46,12 +47,14 @@ export default class SketchWrapper extends Component {
     }
 
     predict(callback){
-        this.setState({has_prediction:false});
-        API.get_predictions(this.state.is_ready, this.state.birds, this.state.bird_states, this.state.pipes, this.state.pipe_states, callback);
+        this.setState({has_prediction:false, predicting: true});
+        API.get_predictions(this.state.birds, this.state.bird_states, this.state.pipes, this.state.pipe_states, callback);
     }
 
-    prediction_received(){
-        this.setState({has_prediction:true});
+    prediction_received(resp){
+        if($.isArray(resp)){
+            this.setState({has_prediction:true, predicting:false});
+        }
     }
 
     clear(){
@@ -91,7 +94,7 @@ export default class SketchWrapper extends Component {
         }, this.state.timeout);
     }
 
-    prepare(){
+    prepare(first = false){
         let self = this;
         self.clear();
         this.state.intervalID = setInterval(function(){
@@ -116,13 +119,20 @@ export default class SketchWrapper extends Component {
                 return;
             }
 
-            self.update_objects();
+            self.update_objects(first);
 
             if(self.state.bird_states.length === 0 && self.state.pipe_states.length === 0){
                 self.update_states();
             }
 
-            self.predict(self.prediction_received);
+            if(!self.state.has_prediction && !self.state.predicting){
+                self.predict(self.prediction_received);
+                return;
+            }
+
+            if(self.state.predicting){
+                return;
+            }
 
             self.run();
             self.clear();
@@ -142,7 +152,8 @@ export default class SketchWrapper extends Component {
 
     componentDidMount() {
         console.log("DidMount");
-        this.prepare();
+        this.handle_info();
+        this.prepare(true);
     }
 
     setup = (p5, canvasParentRef) => {
@@ -165,10 +176,13 @@ export default class SketchWrapper extends Component {
         }
     };
 
-    update_objects = () => {
+    update_objects = (first = false) => {
         for (let i = this.state.pipes.length-1; i >= 0; i--) {
             this.state.pipes[i].show();
-            this.state.pipes[i].update();
+
+            if(!first){
+                this.state.pipes[i].update();
+            }
 
             for(let j = this.state.birds.length - 1; j>=0;j--){
                 if (this.state.pipes[i].hits(this.state.birds[j])) {
@@ -183,8 +197,10 @@ export default class SketchWrapper extends Component {
 
         for(let i = 0; i < this.state.birds.length; i++){
             this.state.birds[i].think(this.state.pipes);
-            this.state.birds[i].update();
             this.state.birds[i].show();
+            if(!first){
+                this.state.birds[i].update();
+            }
         }
     };
 
@@ -210,11 +226,16 @@ export default class SketchWrapper extends Component {
                     data: MAX_FITNESS,
                     lineTension: 0,
                     backgroundColor: "rgba(150,150,150,0.1)"
+                },
+                {
+                    label: 'Avg Score',
+                    data: AVG_SCORE,
+                    lineTension: 0,
+                    backgroundColor: "rgba(0,200,200,0.1)"
                 }]
             }
         });
         this.state.chart.update();
-        info.push(this.state.number_of_birds);
         this.props.info(info);
     }
 

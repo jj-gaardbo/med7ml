@@ -68,12 +68,12 @@ export class Bird{
 /*        if((this.y > this.closest.top && this.y < this.closest.bottom)){
             this.score++;
         }*/
-        /*if (this.y >= HEIGHT || this.y <= 0) {
+        if (this.y >= HEIGHT || this.y <= 0) {
             this.score = Math.floor(this.score*0.5);
-        }*/
+        }
 
         this.velocity += this.gravity;
-        this.velocity *= 0.95;
+        this.velocity *= 0.99;
         this.y += this.velocity;
 
         if (this.y >= HEIGHT) {

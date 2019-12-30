@@ -11,7 +11,8 @@ class App extends React.Component {
             mating_pool_size: 0,
             max_fitness: 0,
             population_count: 0,
-            alive_count: 0
+            alive_count: 0,
+            avg_score:0
         };
 
         this.handle_alive_count = this.handle_alive_count.bind(this)
@@ -23,7 +24,15 @@ class App extends React.Component {
     }
 
     handle_info(info){
-        this.setState({generation:info[0], mating_pool_size:info[2], max_fitness:info[1], population_count:info[3]});
+        if(info){
+            this.setState({
+                generation:info[0],
+                population_count:info[1],
+                max_fitness:info[2],
+                mating_pool_size:info[3],
+                avg_score:info[4],
+                });
+        }
     }
 
     render() {
@@ -36,6 +45,7 @@ class App extends React.Component {
                     <p>Mating Pool Size: {this.state.mating_pool_size}</p>
                     <p>Max Fitness: {this.state.max_fitness}</p>
                     <p>Alive Count: {this.state.alive_count}</p>
+                    <p>Avg score: {this.state.avg_score}</p>
                 </div>
             </div>
         )

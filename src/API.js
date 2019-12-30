@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import {GENERATION, MAX_FITNESS, set_alive_count} from "./constants";
+import {AVG_SCORE, GENERATION, MAX_FITNESS, set_alive_count} from "./constants";
 
 let $ = require('jquery');
 
@@ -18,19 +18,12 @@ export default class API{
         });
     }
 
-    static get_predictions(is_ready, birds, bird_states, pipes, pipe_states, callback){
-        if(!is_ready){
-            return;
-        }
+    static get_predictions(birds, bird_states, pipes, pipe_states, callback){
         $.get(url + 'predictions?bird_states='+JSON.stringify(bird_states)+'&pipe_states='+JSON.stringify(pipe_states), (resp) => {
-            if(resp == "Warning"){
-                return;
-            }
+            callback(resp);
             for(let i = 0; i < birds.length; i++){
                 birds[i].prediction = resp[i][0];
             }
-        }).done(function(resp){
-            callback()
         });
     };
 
@@ -43,15 +36,24 @@ export default class API{
 
     static get_info(callback){
         $.get(url + 'get_info', (resp) => {
-            let max_fitness = parseFloat(resp[1]);
-            MAX_FITNESS.push(max_fitness);
             GENERATION.push(parseInt(resp[0]));
 
-            if(MAX_FITNESS.length > 200){
+            let max_fitness = parseFloat(resp[2]);
+            MAX_FITNESS.push(max_fitness*100);
+
+            let avg_score = parseFloat(resp[4]);
+            AVG_SCORE.push(avg_score);
+
+
+            if(MAX_FITNESS.length > 500){
                 MAX_FITNESS.splice(0, 1);
             }
 
-            if(GENERATION.length > 200){
+            if(AVG_SCORE.length > 500){
+                AVG_SCORE.splice(0, 1);
+            }
+
+            if(GENERATION.length > 500){
                 GENERATION.splice(0, 1);
             }
             callback(resp);
