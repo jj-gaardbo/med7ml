@@ -72,6 +72,10 @@ export class Bird{
             this.score = Math.floor(this.score*0.5);
         }*/
 
+        if(this.prediction !== null && this.prediction[0] > this.prediction[1]){
+            this.up();
+        }
+
         this.velocity += this.gravity;
         this.velocity *= 0.98;
         this.y += this.velocity;
@@ -90,10 +94,6 @@ export class Bird{
 
         if(this.dead){
             set_alive_count(get_alive_count()-1);
-        }
-
-        if(this.prediction !== null && this.prediction[0] > 0){
-            this.up();
         }
 
     }
