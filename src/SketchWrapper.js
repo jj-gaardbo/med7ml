@@ -81,12 +81,10 @@ export default class SketchWrapper extends Component {
         if(resp){
             API.get_info(this.handle_info);
             this.prepare();
-            console.log("Prepare...")
         }
     }
 
     is_ready(resp){
-        console.log(resp);
         let self = this;
         self.state.is_ready = false;
         this.state.intervalID = setInterval(function(){
@@ -98,9 +96,7 @@ export default class SketchWrapper extends Component {
         let self = this;
         self.clear();
         this.state.intervalID = setInterval(function(){
-            console.log("Waiting...");
             if(self.state.number_of_birds === 0){
-                console.log("Getting number of birds...");
                 API.get_number_of_birds(self.handle_number_of_birds);
                 return;
             }
@@ -108,13 +104,11 @@ export default class SketchWrapper extends Component {
             set_alive_count(self.state.number_of_birds);
 
             if(self.state.birds.length === 0){
-                console.log("Creating birds...");
                 self.create_birds();
                 return;
             }
 
             if(self.state.pipes.length === 0){
-                console.log("Creating pipes...");
                 self.create_pipes();
                 return;
             }
@@ -141,17 +135,14 @@ export default class SketchWrapper extends Component {
     }
 
     run(){
-        console.log("Run");
         this.setState({is_ready:true,running:true});
     }
 
     stop(){
-        console.log("Stop");
         this.setState({is_ready:false,running:false,birds:[],pipes:[],bird_states:[],pipe_states:[], has_prediction: false});
     }
 
     componentDidMount() {
-        console.log("DidMount");
         this.handle_info();
         this.prepare(true);
     }
@@ -210,7 +201,7 @@ export default class SketchWrapper extends Component {
 
         for(let i = 0; i < this.state.birds.length; i++){
             let middle = this.state.birds[i].closest.middle/HEIGHT;
-            let difference = (this.state.birds[i].y-this.state.birds[i].closest.middle)/HEIGHT;
+            let difference = (this.state.birds[i].closest.middle-this.state.birds[i].y)/HEIGHT;
             this.state.pipe_states = [middle, difference];
             this.state.bird_states.push([(this.state.birds[i].dead ? 0 : 1), this.state.birds[i].y/HEIGHT, this.state.birds[i].score]);
         }
@@ -247,21 +238,22 @@ export default class SketchWrapper extends Component {
             return;
         }
 
-        this.props.count(get_alive_count());
+        if (p5.frameCount % PIPE_FREQ === 0) {
+            this.state.pipes.push(new Pipe(p5));
+        }
 
-        this.update_objects();
-        this.update_states();
+        this.props.count(get_alive_count());
 
         if(this.is_dead()){
             this.stop();
             API.get_next_generation(this.is_ready);
-        } else {
-            this.predict(this.prediction_received);
+            return;
         }
 
-        if (p5.frameCount % PIPE_FREQ === 0) {
-            this.state.pipes.push(new Pipe(p5));
-        }
+        this.update_objects();
+        this.update_states();
+        this.predict(this.prediction_received);
+
     };
 
     keyPressed = p5 => {

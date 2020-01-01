@@ -28,7 +28,6 @@ export default class API{
     };
 
     static get_next_generation(callback){
-        console.log("Next");
         $.get(url + 'get_next_generation', (resp) => {
             callback(resp);
         });
