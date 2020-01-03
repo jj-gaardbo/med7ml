@@ -9,7 +9,7 @@ export class Bird{
         //this.y += Math.floor(Math.random() * this.size);
         this.x = 300;
         //this.x+=Math.floor(Math.random() * this.size);
-        this.gravity = 0.8;
+        this.gravity = 5;
         this.lift = -12;
         this.velocity = 0;
         this.speed = GAME_SPEED;
@@ -18,14 +18,13 @@ export class Bird{
         this.prediction = null;
         this.closest = null;
         this.dead = false;
-        this.random_col = Math.floor(Math.random() * 255);
         this.player = player;
     }
 
     show() {
         let color = (this.score*2 >= 255) ? 255 : this.score*2;
         this.p5.stroke(255);
-        this.p5.fill(this.random_col, color, this.random_col, 50);
+        this.p5.fill(0, color, 255, 50);
 
         if(this.player){
             this.p5.stroke(0,0,255);
@@ -90,10 +89,6 @@ export class Bird{
             this.dead = true;
             this.y = 0;
             this.velocity = 0;
-        }
-
-        if(this.dead){
-            set_alive_count(get_alive_count()-1);
         }
 
     }

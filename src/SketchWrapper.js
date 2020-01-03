@@ -8,7 +8,7 @@ import {
     CTX,
     GENERATION,
     MAX_FITNESS,
-    set_alive_count, get_alive_count, AVG_SCORE
+    set_alive_count, get_alive_count, AVG_SCORE, ALIVE_COUNT
 } from "./constants";
 import {Pipe} from "./pipe";
 import {Bird} from "./bird";
@@ -160,6 +160,8 @@ export default class SketchWrapper extends Component {
                 dead++;
             }
         }
+        set_alive_count(this.state.number_of_birds-dead);
+        this.props.count(get_alive_count());
         if(dead === this.state.birds.length){
             return true;
         } else {
@@ -216,13 +218,13 @@ export default class SketchWrapper extends Component {
                     label: 'Max Fitness',
                     data: MAX_FITNESS,
                     lineTension: 0,
-                    backgroundColor: "rgba(150,100,80,0.1)"
+                    backgroundColor: "rgba(255,11,11,0.5)"
                 },
                 {
                     label: 'Avg Score',
                     data: AVG_SCORE,
                     lineTension: 0,
-                    backgroundColor: "rgba(80,100,150,0.1)"
+                    backgroundColor: "rgba(255,155,11,0.1)"
                 }]
             }
         });
